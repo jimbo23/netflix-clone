@@ -10,9 +10,6 @@ const Auth = () => {
   });
   const [variant, setVariant] = useState<'login' | 'register'>('login');
 
-  const [count, setCount] = useState(0);
-  const [another1, setAnother] = useState(100);
-
   const toggleVariant = useCallback(() => {
     setVariant((prev) => (prev === 'login' ? 'register' : 'login'));
   }, []);
