@@ -1,8 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import { Input } from '@components/Input';
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, {
+  ChangeEvent,
+  SyntheticEvent,
+  useCallback,
+  useState,
+} from 'react';
+import axios from 'axios';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const Auth = () => {
+  const router = useRouter();
   const [formValue, setFormValue] = useState({
     username: '',
     email: '',
@@ -23,6 +32,37 @@ const Auth = () => {
     []
   );
 
+  const login = useCallback(
+    async (e: SyntheticEvent) => {
+      e.preventDefault();
+      try {
+        await signIn('credentials', {
+          email: formValue.email,
+          password: formValue.password,
+          redirect: false,
+          callbackUrl: '/',
+        });
+        router.push('/');
+      } catch (err) {
+        console.log({ err });
+      }
+    },
+    [formValue.email, formValue.password, router]
+  );
+
+  const register = useCallback(
+    async (e: SyntheticEvent) => {
+      e.preventDefault();
+      try {
+        await axios.post('/api/register', formValue);
+        login(e);
+      } catch (error) {
+        console.log({ error });
+      }
+    },
+    [formValue, login]
+  );
+
   return (
     <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
       <div className="bg-black w-full h-full lg:bg-opacity-50">
@@ -34,33 +74,38 @@ const Auth = () => {
             <h2 className="text-white text-4xl mb-8 font-semibold">
               {variant === 'login' ? 'Sign In' : 'Register'}
             </h2>
-            <div className="flex flex-col gap-4">
-              {variant === 'register' && (
+            <form onSubmit={variant === 'login' ? login : register}>
+              <div className="flex flex-col gap-4">
+                {variant === 'register' && (
+                  <Input
+                    label="Username"
+                    onChange={handleChange}
+                    id="username"
+                    value={formValue.username}
+                  />
+                )}
                 <Input
-                  label="Username"
+                  label="Email"
                   onChange={handleChange}
-                  id="username"
-                  value={formValue.username}
+                  id="email"
+                  type="email"
+                  value={formValue.email}
                 />
-              )}
-              <Input
-                label="Email"
-                onChange={handleChange}
-                id="email"
-                type="email"
-                value={formValue.email}
-              />
-              <Input
-                label="Password"
-                onChange={handleChange}
-                id="password"
-                type="password"
-                value={formValue.password}
-              />
-            </div>
-            <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
-              {variant === 'login' ? 'Login' : 'Sign Up'}
-            </button>
+                <Input
+                  label="Password"
+                  onChange={handleChange}
+                  id="password"
+                  type="password"
+                  value={formValue.password}
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition"
+              >
+                {variant === 'login' ? 'Login' : 'Sign Up'}
+              </button>
+            </form>
             <p className="text-neutral-500 mt-12">
               {variant === 'login'
                 ? 'First time using Netflix?'
