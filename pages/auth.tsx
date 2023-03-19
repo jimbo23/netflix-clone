@@ -1,14 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { Input } from '@components/Input';
-import React, {
-  ChangeEvent,
-  SyntheticEvent,
-  useCallback,
-  useState,
-} from 'react';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { ChangeEvent, SyntheticEvent, useCallback, useState } from 'react';
+import { FaGithub } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
 const Auth = () => {
   const router = useRouter();
@@ -105,6 +102,24 @@ const Auth = () => {
               >
                 {variant === 'login' ? 'Login' : 'Sign Up'}
               </button>
+              <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+                <div
+                  onClick={() => signIn('google', { callbackUrl: '/' })}
+                  className="
+                  w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition
+                "
+                >
+                  <FcGoogle size={30} />
+                </div>
+                <div
+                  onClick={() => signIn('github', { callbackUrl: '/' })}
+                  className="
+                  w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition
+                "
+                >
+                  <FaGithub size={30} />
+                </div>
+              </div>
             </form>
             <p className="text-neutral-500 mt-12">
               {variant === 'login'
