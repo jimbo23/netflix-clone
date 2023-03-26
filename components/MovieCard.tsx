@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import { FavouriteButton } from '@components/FavouriteButton';
 import { BsFillPlayFill } from 'react-icons/bs';
+
 type MovieCardProps = {
   data: Record<string, any>;
 };
@@ -90,6 +92,7 @@ export const MovieCard = ({ data }: MovieCardProps) => {
             >
               <BsFillPlayFill size={30} />
             </div>
+            <FavouriteButton movieId={data.id} />
           </div>
 
           <p className="text-green-400 font-semibold mt-4">
