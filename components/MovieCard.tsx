@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { FavouriteButton } from '@components/FavouriteButton';
 import { useInfoModal } from '@hooks/useInfoModal';
 import { useRouter } from 'next/router';
